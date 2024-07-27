@@ -27,13 +27,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/blogs", upload.single("coverImage"), auth, createBlog);
-router.get("/blogs", getBlogs);
-router.get("/blog/:id", findBlog);
+router.post("/create", upload.single("coverImage"), auth, createBlog);
+router.get("/products", getBlogs);
+router.get("/product/:id", findBlog);
 
 router.post("/login", loginUser);
-// router.post("/login", (req, res) => {
-//   res.send("hello");
-// });
 
 module.exports = router;

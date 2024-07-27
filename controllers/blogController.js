@@ -1,6 +1,7 @@
 const blogModel = require("../models/blog");
 
 const createBlog = async (req, res) => {
+  console.log(req.body);
   if (!req.file) {
     return res.status(400).json({ error: "Please upload a file" });
   }
@@ -14,10 +15,11 @@ const createBlog = async (req, res) => {
     ratings,
     productDetails,
     tags,
+    link,
   } = req.body;
 
   // Construct the cover image URL
-  const coverImageURL = `http://localhost:4000/${req.file.path}`;
+  const coverImageURL = `http://localhost:5000/${req.file.path}`;
 
   // Create a new blog instance with the provided data
   const newBlog = new blogModel({
@@ -52,9 +54,10 @@ const getBlogs = async (req, res) => {
       filter.tags = { $in: tags.split(",") }; // Split tags into an array and use $in to filter
     }
 
-    const blogs = await blogModel.find(filter).sort({ createdAt: -1 }); // Sort by creation date in descending order
+    // Sort by updatedAt in descending order to get the most recently updated documents first
+    const blogs = await blogModel.find(filter).sort({ createdAt: -1 });
 
-    res.send(blogs);
+    res.send({ blogs, blogLength: blogs.length });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
